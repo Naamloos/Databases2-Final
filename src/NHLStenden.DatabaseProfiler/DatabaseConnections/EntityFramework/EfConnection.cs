@@ -29,7 +29,7 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.EntityFramework
             this.logger.LogMessage($"Connected to an Entity Framework Core database.\n  - EF Provider: {connection.Database.ProviderName.Split('.').Last()}.", true);
         }
 
-        public void Create(int amount)
+        public void Insert(int amount)
         {
             for (int i = 0; i < amount; i++)
             {
@@ -45,15 +45,15 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.EntityFramework
                 {
                     Name = "Creepy Movie :s"
                 }).Entity;
+                connection.SaveChanges();
 
                 connection.SeriesGenres.Add(new SeriesGenre()
                 {
                     SeriesId = series.Id,
                     GenreId = genre.Id
                 });
+                connection.SaveChanges();
             }
-
-            connection.SaveChanges();
         }
 
         public void Delete(int amount)
@@ -77,7 +77,10 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.EntityFramework
         public void Update(int amount)
         {
             var slice = connection.Series.Take(amount);
-            slice.ForEachAsync(x => x.Title = "Lorem Ipsum Kebab");
+            foreach(var s in slice)
+            {
+                s.Title = "Lorem Ipsum Kebab";
+            }
             connection.Series.UpdateRange(slice);
             connection.SaveChanges();
         }

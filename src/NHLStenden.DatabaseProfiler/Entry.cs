@@ -15,8 +15,6 @@ namespace NHLStenden.DatabaseProfiler
             var profiler = new Profiler();
             profiler.Start();
             Console.ReadKey();
-
-            //TODO: -mongo -identity increment in sql server -identity increment in ef core(?) -manage to truncate tables or work around not knowing IDs
         }
     }
 }

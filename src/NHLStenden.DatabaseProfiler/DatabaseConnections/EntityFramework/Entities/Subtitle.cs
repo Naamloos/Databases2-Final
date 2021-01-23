@@ -13,6 +13,7 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.EntityFramework.Entiti
     {
         [Key]
         [Column("Id")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
         public int Id { get; set; }
 

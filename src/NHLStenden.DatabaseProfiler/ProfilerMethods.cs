@@ -19,25 +19,25 @@ namespace NHLStenden.DatabaseProfiler
         // execution order and order with linq in Profiler.cs?
 
         // Profiler methods have to be public + static else I can not find them (easily) with reflection.
-        [ProfilerInfo("Create", "Profiler test for CREATE methods.")]
-        public static void CreateMethod(IDatabaseConnection database, int amount)
+        [ProfilerInfo("Insert", "Profiler test for INSERT queries.")]
+        public static void InsertMethod(IDatabaseConnection database, int amount)
         {
-            database.Create(amount);
+            database.Insert(amount);
         }
 
-        [ProfilerInfo("Select", "Profiler test for SELECT methods.")]
+        [ProfilerInfo("Select", "Profiler test for SELECT queries.")]
         public static void SelectMethod(IDatabaseConnection database, int amount)
         {
             database.Select(amount);
         }
 
-        [ProfilerInfo("Update", "Profiler test for UPDATE methods.")]
+        [ProfilerInfo("Update", "Profiler test for UPDATE queries.")]
         public static void UpdateMethod(IDatabaseConnection database, int amount)
         {
             database.Update(amount);
         }
 
-        [ProfilerInfo("Delete", "Profiler test for DELETE methods.")]
+        [ProfilerInfo("Delete", "Profiler test for DELETE queries.")]
         public static void DeleteMethod(IDatabaseConnection database, int amount)
         {
             database.Delete(amount);

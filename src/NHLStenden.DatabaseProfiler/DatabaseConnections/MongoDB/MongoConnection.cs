@@ -32,7 +32,7 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.MongoDB
             this.logger.LogMessage($"Connected to a MongoDB Server\n  - MongoDB Server version: {version}.", true);
         }
 
-        public void Create(int amount)
+        public void Insert(int amount)
         {
             throw new NotImplementedException();
         }

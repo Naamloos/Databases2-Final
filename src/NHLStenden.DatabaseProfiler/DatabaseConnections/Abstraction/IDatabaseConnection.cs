@@ -28,7 +28,7 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.Abstraction
         /// <returns>Connection active.</returns>
         bool IsConnected();
 
-        void Create(int amount);
+        void Insert(int amount);
 
         void Select(int amount);
 

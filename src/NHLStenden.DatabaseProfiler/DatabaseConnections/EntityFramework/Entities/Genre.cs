@@ -14,6 +14,7 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.EntityFramework.Entiti
         [Key]
         [Column("Id")]
         [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Column("GenreName")]
