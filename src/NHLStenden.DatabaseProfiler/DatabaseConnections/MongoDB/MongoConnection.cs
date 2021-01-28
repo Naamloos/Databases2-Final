@@ -29,6 +29,15 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.MongoDB
         {
             this.connection.StartSession();
             this.database = this.connection.GetDatabase(config.MongoDatabaseName);
+            var collections = this.database.ListCollectionNames().ToList();
+
+            if (!collections.Contains("Series"))
+                this.database.CreateCollection("Series");
+            if (!collections.Contains("Genre"))
+                this.database.CreateCollection("Genre");
+            if (!collections.Contains("SeriesGenre"))
+                this.database.CreateCollection("SeriesGenre");
+
             var version = this.database.RunCommand(new BsonDocumentCommand<BsonDocument>(new BsonDocument() { { "buildInfo", 1 } }))["version"];
             this.connected = true;
             this.logger.LogMessage($"Connected to a MongoDB Server\n  - MongoDB Server version: {version}.", true);
@@ -36,7 +45,7 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.MongoDB
 
         public void Insert(int amount)
         {
-            throw new NotImplementedException();
+            this.database.
         }
 
         public void Delete(int amount)

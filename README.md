@@ -1,6 +1,12 @@
 # Database Profiler
 This is my Databases 2 End Assignment.
 
+## Use case
+For this profiler, I've decided to use the following three tables:
+- `Series`
+- `Genre`
+- `SeriesGenre`
+
 ## Setup
 ### Requirements
 - A working MSSQL Server.
@@ -8,7 +14,7 @@ This is my Databases 2 End Assignment.
 
 ### Step-by-step
 1. Import the Netflix database from the `/dbs/` folder into MSSQL.
-2. Create a database in your MongoDB with the collection `Series`.
+2. Create a database in your MongoDB.
 3. Run the profiler once.
 4. (**OPTIONAL**) Edit `Config.json` with your database values.
 5. Run the profiler again. If all connections succeed, the setup was successful.
