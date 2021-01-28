@@ -15,15 +15,17 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.EntityFramework
         private Logger logger;
         private NetflixContext connection;
         private bool connected = false;
+        private Config config;
 
-        public EfConnection(Logger logger)
+        public EfConnection(Logger logger, Config config)
         {
             this.logger = logger;
+            this.config = config;
         }
 
         public void Connect()
         {
-            connection = new NetflixContext();
+            connection = new NetflixContext(config);
             connection.Database.EnsureCreated();
             this.connected = true;
             this.logger.LogMessage($"Connected to an Entity Framework Core database.\n  - EF Provider: {connection.Database.ProviderName.Split('.').Last()}.", true);
@@ -45,15 +47,15 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.EntityFramework
                 {
                     Name = "Creepy Movie :s"
                 }).Entity;
-                connection.SaveChanges();
 
                 connection.SeriesGenres.Add(new SeriesGenre()
                 {
-                    SeriesId = series.Id,
-                    GenreId = genre.Id
+                    Series = series,
+                    Genre = genre
                 });
-                connection.SaveChanges();
             }
+
+            connection.SaveChanges();
         }
 
         public void Delete(int amount)
@@ -62,10 +64,13 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.EntityFramework
             // Deleting all table's entries.
             var slice = connection.SeriesGenres.Take(amount);
             connection.SeriesGenres.RemoveRange(slice);
+
             var slice2 = connection.Series.Take(amount);
             connection.Series.RemoveRange(slice2);
+
             var slice3 = connection.Genres.Take(amount);
             connection.Genres.RemoveRange(slice3);
+
             connection.SaveChanges();
         }
 
@@ -104,8 +109,15 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.EntityFramework
         public DbSet<View> Views { get; set; }
         public DbSet<WatchlistItem> WatchlistItems { get; set; }
 
+        private string connectionstring { get; set; }
+
+        public NetflixContext(Config config)
+        {
+            this.connectionstring = config.EntityFrameworkConnectionString;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlServer(Constants.EF_CONNECTION_STRING);
+            => options.UseSqlServer(this.connectionstring);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

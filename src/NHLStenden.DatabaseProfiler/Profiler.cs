@@ -27,13 +27,16 @@ namespace NHLStenden.DatabaseProfiler
         private IDatabaseConnection mongoConnection;
         private IDatabaseConnection efConnection;
 
-        public Profiler()
+        private Config config;
+
+        public Profiler(Config config)
         {
+            this.config = config;
             this.logger = new Logger("NHL Stenden Database Profiler");
             this.profiler = new ExecutionProfiler(this.logger);
-            this.adoConnection = new AdoConnection(this.logger);
-            this.mongoConnection = new MongoConnection(this.logger);
-            this.efConnection = new EfConnection(this.logger);
+            this.adoConnection = new AdoConnection(this.logger, config);
+            this.mongoConnection = new MongoConnection(this.logger, config);
+            this.efConnection = new EfConnection(this.logger, config);
         }
 
         /// <summary>
@@ -46,15 +49,18 @@ namespace NHLStenden.DatabaseProfiler
 
             this.logger.LogMessage("Attempting connection to all databases...");
             this.adoConnection.Connect();
-            //this.mongoConnection.Connect();
+            this.mongoConnection.Connect();
             this.efConnection.Connect();
             this.logger.LogMessage("Done connecting to all databases.");
 
             this.logger.LogMessage("Registering databases to profiler...");
             this.profiler.RegisterDatabase(this.adoConnection);
-            //this.profiler.RegisterDatabase(this.mongoConnection);
+            this.profiler.RegisterDatabase(this.mongoConnection);
             this.profiler.RegisterDatabase(this.efConnection);
             this.logger.LogMessage("Done registering databases to profiler.");
+
+            this.logger.LogMessage("Press any key to start profiling...");
+            Console.ReadKey();
 
             this.logger.LogMessage("Starting profiling methods.");
 
@@ -65,7 +71,7 @@ namespace NHLStenden.DatabaseProfiler
                 .Where(x => x.CustomAttributes
                     .Any(y => y.AttributeType == typeof(ProfilerInfoAttribute)));
 
-            foreach (var amount in Constants.AMOUNTS)
+            foreach (var amount in config.amounts)
             {
                 foreach (var m in methods)
                 {

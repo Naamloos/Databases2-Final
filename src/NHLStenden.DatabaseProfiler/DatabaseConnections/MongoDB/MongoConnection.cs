@@ -16,17 +16,19 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.MongoDB
         private MongoClient connection;
         private IMongoDatabase database;
         private bool connected = false;
+        private Config config;
 
-        public MongoConnection(Logger logger)
+        public MongoConnection(Logger logger, Config config)
         {
             this.logger = logger;
-            this.connection = new MongoClient(Constants.MONGO_CONNECTION_STRING);
+            this.config = config;
+            this.connection = new MongoClient(config.MongoConnectionString);
         }
 
         public void Connect()
         {
             this.connection.StartSession();
-            this.database = this.connection.GetDatabase(Constants.MONGO_DATABASE_NAME);
+            this.database = this.connection.GetDatabase(config.MongoDatabaseName);
             var version = this.database.RunCommand(new BsonDocumentCommand<BsonDocument>(new BsonDocument() { { "buildInfo", 1 } }))["version"];
             this.connected = true;
             this.logger.LogMessage($"Connected to a MongoDB Server\n  - MongoDB Server version: {version}.", true);
