@@ -33,27 +33,39 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.EntityFramework
 
         public void Insert(int amount)
         {
+            var series = new List<Series>();
+            var genres = new List<Genre>();
+            var seriesgenres = new List<SeriesGenre>();
+
             for (int i = 0; i < amount; i++)
             {
-                var series = connection.Series.Add(new Series()
+                var s = new Series()
                 {
                     IsFilm = true,
                     AgeRestriction = 12,
                     Description = "Lorem Ipsum Doner Kebab",
                     Title = "Lorem Ipsum"
-                }).Entity;
+                };
 
-                var genre = connection.Genres.Add(new Genre()
+                var g = new Genre()
                 {
                     Name = "Creepy Movie :s"
-                }).Entity;
+                };
 
-                connection.SeriesGenres.Add(new SeriesGenre()
+                series.Add(s);
+
+                genres.Add(g);
+
+                seriesgenres.Add(new SeriesGenre()
                 {
-                    Series = series,
-                    Genre = genre
+                    Series = s,
+                    Genre = g
                 });
             }
+
+            this.connection.Series.AddRange(series);
+            this.connection.Genres.AddRange(genres);
+            this.connection.SeriesGenres.AddRange(seriesgenres);
 
             connection.SaveChanges();
         }
@@ -114,6 +126,7 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.EntityFramework
         public NetflixContext(Config config)
         {
             this.connectionstring = config.EntityFrameworkConnectionString;
+            this.Database.SetCommandTimeout(TimeSpan.FromHours(1));
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)

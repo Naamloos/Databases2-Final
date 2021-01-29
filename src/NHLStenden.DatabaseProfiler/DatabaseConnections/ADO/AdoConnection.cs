@@ -33,27 +33,12 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.ADO
 
         public void Insert(int amount)
         {
-            StringBuilder query = new StringBuilder();
             for (int i = 1; i <= amount; i++)
             {
-                query.Append("INSERT INTO Series (Title, Description, IsFilm, AgeRestriction) VALUES ('Lorem Ipsum', 'Lorem Ipsum Doner Kebab', 1, 12);");
+                this.RunQueryNonresult("INSERT INTO Series (Title, Description, IsFilm, AgeRestriction) VALUES ('Lorem Ipsum', 'Lorem Ipsum Doner Kebab', 1, 12);" +
+                    "INSERT INTO Genre (GenreName) VALUES ('Creepy Movie :s');" +
+                    $"INSERT INTO Series_Genre(SeriesId, GenreId) VALUES({i}, {i});");
             }
-            this.RunQueryNonresult(query.ToString());
-            query.Clear();
-
-            for (int i = 1; i <= amount; i++)
-            {
-                query.Append("INSERT INTO Genre (GenreName) VALUES ('Creepy Movie :s');");
-            }
-            this.RunQueryNonresult(query.ToString());
-            query.Clear();
-
-            for (int i = 1; i <= amount; i++)
-            {
-                query.Append($"INSERT INTO Series_Genre(SeriesId, GenreId) VALUES({i}, {i});");
-            }
-            this.RunQueryNonresult(query.ToString());
-            query.Clear();
         }
 
         public void Delete(int amount)
@@ -85,6 +70,7 @@ namespace NHLStenden.DatabaseProfiler.DatabaseConnections.ADO
                 throw new ArgumentException("Your query is empty ya dingus");
 
             var cmd = new SqlCommand(query, this.connection);
+            cmd.CommandTimeout = (int)TimeSpan.FromHours(1).TotalSeconds;
             cmd.ExecuteNonQuery();
         }
     }
